@@ -1,0 +1,25 @@
+version: '3.1'
+
+services:
+  postgres:
+    image: postgres:latest
+    environment:
+      - POSTGRES_PASSWORD=money
+      - POSTGRES_USER=srv.money-transfer
+      - POSTGRES_DB=wallet
+    ports:
+      - "5432:5432"
+
+  quarkus:
+    build:
+      context: .
+      dockerfile: Dockerfile.jvm
+    depends_on:
+      - postgres
+    ports:
+      - 8080:8080
+
+  redis:
+    image: "redis:alpine"
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes

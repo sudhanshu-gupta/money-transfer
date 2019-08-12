@@ -1,6 +1,9 @@
 package io.sudhanshugupta.moneytransfer;
 
 import io.quarkus.test.junit.QuarkusTest;
+import io.restassured.http.Header;
+import java.util.HashMap;
+import java.util.Map;
 import org.junit.jupiter.api.Test;
 
 import static io.restassured.RestAssured.given;
@@ -12,10 +15,9 @@ public class accountResourceTest {
     @Test
     public void testHelloEndpoint() {
         given()
-          .when().get("/account/balance")
+          .when().header(new Header("accountId", "1")).contentType("application/json").get("/account/balance")
           .then()
-             .statusCode(200)
-             .body(is("hello"));
+             .statusCode(200);
     }
 
 }
