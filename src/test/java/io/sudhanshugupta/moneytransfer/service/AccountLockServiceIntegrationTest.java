@@ -7,21 +7,36 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import io.lettuce.core.SetArgs;
 import io.lettuce.core.api.sync.RedisCommands;
 import io.quarkus.test.junit.QuarkusTest;
-import io.sudhanshugupta.moneytransfer.AbstractIntegrationTest;
 import io.sudhanshugupta.moneytransfer.errors.ErrorEnum;
 import io.sudhanshugupta.moneytransfer.errors.LockAcquisitionException;
+import java.io.IOException;
 import javax.inject.Inject;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import redis.embedded.RedisServer;
 
 @QuarkusTest
-class AccountLockServiceIntegrationTest extends AbstractIntegrationTest {
+class AccountLockServiceIntegrationTest {
 
   private static final String KEY_PLACEHOLDER = "acc:%d";
   private static final long LOCK_TIMEOUT_IN_MILLIS = 1000;
+  private static RedisServer redisServer;
   @Inject
   RedisCommands<String, String> redisCommands;
   @Inject
   AccountLockService accountLockService;
+
+  @BeforeAll
+  public static void setUp() throws IOException {
+    redisServer = new RedisServer(6379);
+    redisServer.start();
+  }
+
+  @AfterAll
+  public static void tearDown() {
+    redisServer.stop();
+  }
 
   @Test
   public void shouldAcquireAccountLock() {

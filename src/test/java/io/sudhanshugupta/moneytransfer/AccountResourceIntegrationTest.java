@@ -12,11 +12,28 @@ import io.sudhanshugupta.moneytransfer.model.AccountTransferRequest;
 import io.sudhanshugupta.moneytransfer.model.AccountTransferResponse;
 import io.sudhanshugupta.moneytransfer.model.BalanceResponse;
 import io.sudhanshugupta.moneytransfer.model.ErrorResponse;
+import java.io.IOException;
 import java.math.BigDecimal;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import redis.embedded.RedisServer;
 
 @QuarkusTest
-public class AccountResourceIntegrationTest extends AbstractIntegrationTest {
+public class AccountResourceIntegrationTest {
+
+  private static RedisServer redisServer;
+
+  @BeforeAll
+  public static void setUp() throws IOException {
+    redisServer = new RedisServer(6379);
+    redisServer.start();
+  }
+
+  @AfterAll
+  public static void tearDown() {
+    redisServer.stop();
+  }
 
   @Test
   public void shouldTransferAmountWhenSenderHasSufficientBalance() {
