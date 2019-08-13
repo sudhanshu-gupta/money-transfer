@@ -12,7 +12,7 @@ The service is designed to transfer money between accounts. Following are the ma
 ##### Clone
 - `git clone https://github.com/sudhanshu-gupta/money-transfer.git && cd money-transfer`
 ##### Testing
-  - To run tests, run the following script: ./test.sh
+  - To run tests, run the following script: `./test.sh` or `sh test.sh`. In case of failure, please try running test again or reach out to me.
   - It will run the integration tests and unit tests. Test results along with test case can be viewed by opening the `target/site/surefire-report.html` in the web browser.
 ##### Local
 ###### Pre-requisite
