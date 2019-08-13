@@ -24,7 +24,7 @@ The service is designed to transfer money between accounts. Following are the ma
                              OR 
 - `mvnw.cmd clean package -U && docker-compose up --build`
 
-##### Tech Stack
+##### Tech
 - framework: `https://quarkus.io/`
 - language: `java8`
 - build tool: `maven`
