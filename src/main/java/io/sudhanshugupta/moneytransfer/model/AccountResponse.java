@@ -1,7 +1,6 @@
 package io.sudhanshugupta.moneytransfer.model;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import lombok.Builder;
 import lombok.Value;
 
@@ -13,5 +12,5 @@ public class AccountResponse {
   private String name;
   private String email;
   private BigDecimal balance;
-  private Timestamp createdAt;
+  private Long createdAt;
 }

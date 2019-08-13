@@ -14,9 +14,9 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 public class RedisConfig {
 
   @ConfigProperty(name = "quarkus.redis.host")
-  private String host;
+  String host;
   @ConfigProperty(name = "quarkus.redis.port", defaultValue = "6379")
-  private Integer port;
+  Integer port;
 
   @Produces
   public RedisCommands<String, String> redisCommands() {

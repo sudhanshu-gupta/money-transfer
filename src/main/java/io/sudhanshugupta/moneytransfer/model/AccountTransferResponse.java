@@ -4,7 +4,7 @@ import io.sudhanshugupta.moneytransfer.enumeration.TransactionStatus;
 import lombok.Value;
 
 @Value(staticConstructor = "of")
-public class MoneyTransferResponse {
+public class AccountTransferResponse {
 
   private String transactionReference;
   private TransactionStatus status;

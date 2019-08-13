@@ -2,7 +2,7 @@ package io.sudhanshugupta.moneytransfer.resource;
 
 import io.sudhanshugupta.moneytransfer.facade.AccountServiceFacade;
 import io.sudhanshugupta.moneytransfer.model.AccountRequest;
-import io.sudhanshugupta.moneytransfer.model.MoneyTransferRequest;
+import io.sudhanshugupta.moneytransfer.model.AccountTransferRequest;
 import java.net.URI;
 import java.util.concurrent.CompletionStage;
 import javax.validation.Valid;
@@ -20,7 +20,7 @@ import org.jboss.resteasy.annotations.jaxrs.HeaderParam;
 @RequiredArgsConstructor
 public class AccountResource {
 
-  private static final String ACCOUNT_URI_FORMAT = "http://localhost:8080/account/%s";
+  private static final String ACCOUNT_URI_FORMAT = "http://localhost:8082/account/%s";
   private final AccountServiceFacade accountServiceFacade;
 
   @GET
@@ -31,21 +31,22 @@ public class AccountResource {
   }
 
   @POST
-  @Path("/transfer")
-  @Consumes(MediaType.APPLICATION_JSON)
-  @Produces(MediaType.APPLICATION_JSON)
-  public CompletionStage<Response> transferMoney(@HeaderParam("accountId") final long accountId,
-      @Valid MoneyTransferRequest moneyTransferRequest) {
-    return accountServiceFacade.transfer(accountId, moneyTransferRequest)
-        .thenApply(res -> Response.ok(res).build());
-  }
-
-  @POST
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public CompletionStage<Response> createAccount(@Valid AccountRequest accountRequest) {
     return accountServiceFacade.createAccount(accountRequest)
         .thenApply(res -> Response.created(getLocation(res.getAccountId())).entity(res).build());
+  }
+
+  @POST
+  @Path("/transfer")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  public CompletionStage<Response> transferMoney(
+      @Valid AccountTransferRequest accountTransferRequest,
+      @HeaderParam("accountId") final long accountId) {
+    return accountServiceFacade.transfer(accountId, accountTransferRequest)
+        .thenApply(res -> Response.accepted(res).build());
   }
 
   private URI getLocation(long accountId) {

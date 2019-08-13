@@ -40,6 +40,7 @@ public class AccountTransfer implements Serializable {
   @JoinColumn(name = "sender_id")
   private Account sender;
 
+  @ManyToOne(targetEntity = Account.class)
   @JoinColumn(name = "recipient_id")
   private Account recipient;
 

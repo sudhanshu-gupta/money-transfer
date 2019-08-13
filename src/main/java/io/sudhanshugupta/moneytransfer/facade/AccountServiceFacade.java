@@ -4,9 +4,9 @@ import io.sudhanshugupta.moneytransfer.errors.BadRequestException;
 import io.sudhanshugupta.moneytransfer.errors.ErrorEnum;
 import io.sudhanshugupta.moneytransfer.model.AccountRequest;
 import io.sudhanshugupta.moneytransfer.model.AccountResponse;
+import io.sudhanshugupta.moneytransfer.model.AccountTransferRequest;
+import io.sudhanshugupta.moneytransfer.model.AccountTransferResponse;
 import io.sudhanshugupta.moneytransfer.model.BalanceResponse;
-import io.sudhanshugupta.moneytransfer.model.MoneyTransferRequest;
-import io.sudhanshugupta.moneytransfer.model.MoneyTransferResponse;
 import io.sudhanshugupta.moneytransfer.service.AccountLockService;
 import io.sudhanshugupta.moneytransfer.service.AccountService;
 import java.util.concurrent.CompletableFuture;
@@ -31,7 +31,7 @@ public class AccountServiceFacade {
             .balance(res.getBalance())
             .name(res.getName())
             .email(res.getEmail())
-            .createdAt(res.getCreatedAt())
+            .createdAt(res.getCreatedAt().getTime())
             .build());
   }
 
@@ -48,24 +48,26 @@ public class AccountServiceFacade {
         .thenApply(acc -> BalanceResponse.builder().amount(acc.getBalance()).build());
   }
 
-  public CompletionStage<MoneyTransferResponse> transfer(long accountId,
-      MoneyTransferRequest transferRequest) {
+  public CompletionStage<AccountTransferResponse> transfer(long accountId,
+      AccountTransferRequest transferRequest) {
     if (transferRequest.getRecipientAccountId().equals(accountId)) {
       throw new BadRequestException(ErrorEnum.SENDER_RECIPIENT_SAME);
     }
     return CompletableFuture.supplyAsync(() -> {
+      accountLockService.acquireLock(accountId);
       try {
-        accountLockService.acquireLock(accountId);
         accountLockService.acquireLock(transferRequest.getRecipientAccountId());
-        return accountService
-            .transfer(accountId, transferRequest.getRecipientAccountId(),
-                transferRequest.getAmount());
+        try {
+          return accountService
+              .transfer(accountId, transferRequest.getRecipientAccountId(),
+                  transferRequest.getAmount());
+        } finally {
+          accountLockService.releaseLock(transferRequest.getRecipientAccountId());
+        }
       } finally {
         accountLockService.releaseLock(accountId);
-        accountLockService.releaseLock(transferRequest.getRecipientAccountId());
       }
-    })
-        .thenApply(transfer -> MoneyTransferResponse
-            .of(transfer.getTransactionRef(), transfer.getStatus()));
+    }).thenApply(transfer -> AccountTransferResponse
+        .of(transfer.getTransactionRef(), transfer.getStatus()));
   }
 }

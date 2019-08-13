@@ -6,14 +6,16 @@
   <artifactId>money-transfer</artifactId>
   <version>1.0-SNAPSHOT</version>
   <properties>
-    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <surefire-plugin.version>2.22.0</surefire-plugin.version>
-    <quarkus.version>0.20.0</quarkus.version>
-    <maven.compiler.source>1.8</maven.compiler.source>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <assertj-core.version>3.13.2</assertj-core.version>
     <lombok.version>1.18.8</lombok.version>
-    <maven.compiler.target>1.8</maven.compiler.target>
     <lettuce-core.version>5.1.8.RELEASE</lettuce-core.version>
+    <surefire-plugin.version>2.22.2</surefire-plugin.version>
+    <maven.compiler.target>1.8</maven.compiler.target>
+    <quarkus.version>0.20.0</quarkus.version>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <embedded-redis.version>0.6</embedded-redis.version>
+    <maven.compiler.source>1.8</maven.compiler.source>
   </properties>
   <dependencyManagement>
     <dependencies>
@@ -93,9 +95,53 @@
       <artifactId>lettuce-core</artifactId>
       <version>${lettuce-core.version}</version>
     </dependency>
+    <dependency>
+      <groupId>com.github.kstyrc</groupId>
+      <artifactId>embedded-redis</artifactId>
+      <version>${embedded-redis.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+      <version>${assertj-core.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.platform</groupId>
+      <artifactId>junit-platform-runner</artifactId>
+      <version>1.5.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.vintage</groupId>
+      <artifactId>junit-vintage-engine</artifactId>
+      <version>5.5.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <version>3.0.0</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-junit-jupiter</artifactId>
+      <version>3.0.0</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-smallrye-openapi</artifactId>
+    </dependency>
   </dependencies>
   <build>
     <plugins>
+      <plugin>
+        <artifactId>maven-surefire-report-plugin</artifactId>
+        <version>${surefire-plugin.version}</version>
+      </plugin>
       <plugin>
         <groupId>io.quarkus</groupId>
         <artifactId>quarkus-maven-plugin</artifactId>
@@ -109,9 +155,33 @@
         </executions>
       </plugin>
       <plugin>
+        <artifactId>maven-site-plugin</artifactId>
+        <version>3.8.2</version>
+      </plugin>
+      <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
         <version>${surefire-plugin.version}</version>
+        <executions>
+          <execution>
+            <id>integration-test</id>
+            <phase>integration-test</phase>
+            <goals>
+              <goal>test</goal>
+            </goals>
+            <configuration>
+              <excludes>
+                <exclude>none</exclude>
+              </excludes>
+              <includes>
+                <include>**/*IntegrationTest.java</include>
+              </includes>
+            </configuration>
+          </execution>
+        </executions>
         <configuration>
+          <excludes>
+            <exclude>**/*IntegrationTest.java</exclude>
+          </excludes>
           <systemProperties>
             <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
           </systemProperties>
@@ -119,6 +189,21 @@
       </plugin>
     </plugins>
   </build>
+  <reporting>
+    <plugins>
+      <plugin>
+        <artifactId>maven-surefire-report-plugin</artifactId>
+        <version>${surefire-plugin.version}</version>
+        <reportSets>
+          <reportSet>
+            <reports>
+              <report>report-only</report>
+            </reports>
+          </reportSet>
+        </reportSets>
+      </plugin>
+    </plugins>
+  </reporting>
   <profiles>
     <profile>
       <id>native</id>
@@ -149,11 +234,19 @@
             <version>${surefire-plugin.version}</version>
             <executions>
               <execution>
+                <id>integration-test</id>
+                <phase>integration-test</phase>
                 <goals>
                   <goal>integration-test</goal>
                   <goal>verify</goal>
                 </goals>
                 <configuration>
+                  <excludes>
+                    <exclude>none</exclude>
+                  </excludes>
+                  <includes>
+                    <include>**/*IT.java</include>
+                  </includes>
                   <systemProperties>
                     <native.image.path>${project.build.directory}/${project.build.finalName}-runner</native.image.path>
                   </systemProperties>

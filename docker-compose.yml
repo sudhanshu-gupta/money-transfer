@@ -1,25 +1,41 @@
-version: '3.1'
+version: '3.7'
 
 services:
-  postgres:
+
+  postgres_db:
     image: postgres:latest
-    environment:
-      - POSTGRES_PASSWORD=money
-      - POSTGRES_USER=srv.money-transfer
-      - POSTGRES_DB=wallet
+    container_name: "postgres_db"
+    restart: always
     ports:
-      - "5432:5432"
+      - "54320:5432"
+    volumes:
+      - ./db_init.sql:/docker-entrypoint-initdb.d/db_init.sql
+    environment:
+      POSTGRES_PASSWORD: docker
+      POSTGRES_DB: mydb
+      SCHEMA: public
+      ANON: web_anon
+      AUTHENTICATOR: authenticator
 
   quarkus:
+    restart: always
     build:
       context: .
       dockerfile: Dockerfile.jvm
     depends_on:
-      - postgres
+      - postgres_db
+      - redis
     ports:
-      - 8080:8080
+      - 8082:8082
 
   redis:
     image: "redis:alpine"
+    restart: always
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080

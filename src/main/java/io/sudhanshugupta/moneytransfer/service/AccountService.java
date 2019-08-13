@@ -10,24 +10,23 @@ import io.sudhanshugupta.moneytransfer.errors.TransactionException;
 import io.sudhanshugupta.moneytransfer.model.AccountRequest;
 import io.sudhanshugupta.moneytransfer.repository.AccountRepository;
 import io.sudhanshugupta.moneytransfer.repository.AccountTransferRepository;
-import io.vertx.core.Vertx;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @ApplicationScoped
-@RequiredArgsConstructor(onConstructor = @__(@Inject))
+@RequiredArgsConstructor
 public class AccountService {
 
   private final AccountRepository accountRepository;
   private final AccountTransferRepository accountTransferRepository;
-  private final Vertx vertx;
 
   public Account getAccount(long accountId) {
     return accountRepository.getById(accountId)
@@ -82,7 +81,7 @@ public class AccountService {
   }
 
   @Transactional(rollbackOn = Exception.class)
-  public Account createAccount(AccountRequest accountRequest) {
+  public Account createAccount(final AccountRequest accountRequest) {
     if (accountRepository.findByEmail(accountRequest.getEmail()).isPresent()) {
       throw new BadRequestException(ErrorEnum.ACCOUNT_EXIST);
     }

@@ -17,8 +17,8 @@ public class AccountRepository implements PanacheRepository<Account> {
 
   @Transactional
   public Optional<Account> findByEmail(String email) {
-    Account account = find("SELECT a from Account a where a.email = :email",
-        Parameters.with("email", email).map()).firstResult();
+    Account account = find("SELECT a from Account a where a.email = :em",
+        Parameters.with("em", email).map()).firstResult();
     return Optional.ofNullable(account);
   }
 }

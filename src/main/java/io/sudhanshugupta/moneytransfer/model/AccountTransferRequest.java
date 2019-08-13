@@ -6,7 +6,7 @@ import javax.validation.constraints.NotNull;
 import lombok.Value;
 
 @Value
-public class MoneyTransferRequest {
+public class AccountTransferRequest {
 
   @NotNull(message = "amount cannot be null")
   private BigDecimal amount;
