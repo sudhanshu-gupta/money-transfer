@@ -1,6 +1,6 @@
 # Account Transfer
 
-The service is designed to transfer money between accounts. Following are the main features of the service.
+The service is designed to transfer money between accounts. Few lines for the service.
   - Create account for a given user with unique email. If account already exist, it return Bad Request Exception.
   - Get the balance of a account. If account doesn't exist, it return Not Found Exception.
   - Transfer money between the two existing accounting. Sending accound should have balance greater than or equal to the transfer amount. If sender doesn't have sufficient balance, it throws bad request exception.
