@@ -16,7 +16,7 @@ The service is designed to transfer money between accounts. Following are the ma
   - It will run the integration tests and unit tests. Test results along with test case can be viewed by opening the `target/site/surefire-report.html` in the web browser.
 ##### Local
 ###### Pre-requisite
-- Java 1.8 or higher
+- Java 1.8
 - Docker installed and running. You can download and install docker by using `sh docker_install.sh` file in the project.
 ###### Command
 - To run the service locally, run `sh run.sh` or alternatively, run with the following command based on `nux` or `windows` based system.
