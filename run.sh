@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 
-mvn clean package -U -DskipTests
+./mvnw clean package -U
 docker-compose up --build
