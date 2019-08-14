@@ -11,6 +11,8 @@ import io.sudhanshugupta.moneytransfer.errors.ErrorEnum;
 import io.sudhanshugupta.moneytransfer.errors.LockAcquisitionException;
 import java.io.IOException;
 import javax.inject.Inject;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -27,13 +29,13 @@ class AccountLockServiceIntegrationTest {
   @Inject
   AccountLockService accountLockService;
 
-  @BeforeAll
+  @Before
   public static void setUp() throws IOException {
     redisServer = new RedisServer(6379);
     redisServer.start();
   }
 
-  @AfterAll
+  @After
   public static void tearDown() {
     redisServer.stop();
   }

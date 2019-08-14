@@ -17,19 +17,17 @@ The service is designed to transfer money between accounts. Few lines for the se
 ##### Local
 ###### Pre-requisite
 - Java 1.8
-- Docker installed and running. You can download and install docker by using `sh docker_install.sh` file in the project.
 ###### Command
 - To run the service locally, run `sh run.sh` or alternatively, run with the following command based on `nux` or `windows` based system.
--  `./mvnw clean package -U && docker-compose up --build`
+-  `./mvnw clean package -U quarkus:dev
                              OR 
-- `mvnw.cmd clean package -U && docker-compose up --build`
+- `mvnw.cmd clean package -U quarkus:dev`
 
 ##### Tech
 - framework: `https://quarkus.io/`
 - language: `java8`
 - build tool: `maven`
-- container: `docker`
-- Datastore: `postgres`, `redis`
+- Datastore: `h2`, `embedded-redis`
 
 ### API Specifications
 Api can also be accessed from swagger endpoint `http://localhost:8082/swagger-ui/`
@@ -49,4 +47,5 @@ Transfer amount between two existing account, with the precondition, sufficient 
 curl -X POST "http://localhost:8082/account/transfer" -H "accept: application/json" -H "accountId: 2" -H "Content-Type: application/json" -d "{\"amount\":20,\"recipientAccountId\":1}"
 ```
 
+* For docker based datastore, checkout the `dev` branch.
 * In case of more information/help reach out at sudhanshu97gupta@gmail.com

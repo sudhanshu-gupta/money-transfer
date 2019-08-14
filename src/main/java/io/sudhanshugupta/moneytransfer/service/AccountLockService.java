@@ -6,7 +6,9 @@ import io.sudhanshugupta.moneytransfer.errors.LockAcquisitionException;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @ApplicationScoped
 @RequiredArgsConstructor
 public class AccountLockService {
@@ -22,6 +24,7 @@ public class AccountLockService {
     if (value == null) {
       throw new LockAcquisitionException();
     }
+    log.info("Lock Acquired, account={}", accountId);
   }
 
   public void releaseLock(long accountId) {
@@ -29,6 +32,7 @@ public class AccountLockService {
     String value = redisCommands.get(key);
     if (value != null && value.equals(key)) {
       redisCommands.del(key);
+      log.info("Lock Released, account={}", accountId);
     }
   }
 }
