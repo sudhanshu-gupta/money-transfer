@@ -6,7 +6,7 @@ The service is designed to transfer money between accounts. Few lines for the se
   - Transfer money between the two existing accounting. Sending accound should have balance greater than or equal to the transfer amount. If sender doesn't have sufficient balance, it throws bad request exception.
   - Service supports distributed transaction, by acquiring the distributed lock on the accounts in a mutlithreaded environment. If lock not acquired, it returns the lock exception. As the production ready extension, it could have distributed queue to enqueue the request for accounts and manage request sequentially for a given account.
   - Service can run in a dockerized enviroment. In local, it run in a docker.
-  - Service is integrated with OpenApi with Swagger. Api's can be accessed from Swagger UI as well. To access, hit browser with following url - `http://localhost:8082/swagger-ui/` (when run in local)
+  - Service is integrated with OpenApi with Swagger. Api's can be accessed from Swagger UI as well. To access, hit browser with following url - http://localhost:8082/swagger-ui/ (when run in local)
 
 # Get Started
 ##### Clone
