@@ -19,7 +19,7 @@ The service is designed to transfer money between accounts. Few lines for the se
 - Java 1.8
 ###### Command
 - To run the service locally, run `sh run.sh` or alternatively, run with the following command based on `nux` or `windows` based system.
--  `./mvnw clean package -U quarkus:dev
+-  `./mvnw clean package -U quarkus:dev`
                              OR 
 - `mvnw.cmd clean package -U quarkus:dev`
 
