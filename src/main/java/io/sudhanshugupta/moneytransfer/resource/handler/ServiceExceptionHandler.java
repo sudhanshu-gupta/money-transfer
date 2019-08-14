@@ -1,7 +1,6 @@
 package io.sudhanshugupta.moneytransfer.resource.handler;
 
 import io.sudhanshugupta.moneytransfer.errors.ServiceException;
-import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
