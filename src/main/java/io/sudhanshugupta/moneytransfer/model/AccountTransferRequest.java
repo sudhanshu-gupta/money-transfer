@@ -7,8 +7,8 @@ import lombok.Value;
 
 @Value
 public class AccountTransferRequest {
-
   @NotNull(message = "amount cannot be null")
+  @Min(value = 0, message = "amount must be greater than 0")
   private BigDecimal amount;
   @NotNull(message = "receiverId cannot be null")
   @Min(value = 1, message = "receiverId must be greater than 0")
