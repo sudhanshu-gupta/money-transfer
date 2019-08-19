@@ -56,12 +56,16 @@ public class Account implements Serializable {
   }
 
   public void credit(BigDecimal amount) {
-    balance = Optional.ofNullable(balance).orElse(BigDecimal.ZERO).add(amount);
+    balance = Optional.ofNullable(balance).orElse(BigDecimal.ZERO);
+    if (amount.compareTo(BigDecimal.ZERO) < 0 && balance.compareTo(amount.abs()) < 0) {
+      throw new TransactionException(ErrorEnum.INSUFFICIENT_BALANCE);
+    }
+    balance = balance.add(amount);
   }
 
   public void debit(BigDecimal amount) {
     balance = Optional.ofNullable(balance).orElse(BigDecimal.ZERO);
-    if (balance.compareTo(amount) < 0) {
+    if (amount.compareTo(BigDecimal.ZERO) > 0 && balance.compareTo(amount) < 0) {
       throw new TransactionException(ErrorEnum.INSUFFICIENT_BALANCE);
     }
     balance = balance.subtract(amount);

@@ -46,7 +46,7 @@ class AccountServiceTest {
   AccountService accountService;
 
   @Test
-  public void shouldTransferMoneyWhenSenderHasSufficientMoney() {
+  public void shouldCreditTransferMoneyWhenSenderHasSufficientMoney() {
     doNothing().when(accountRepository)
         .persist(any(Account.class), any(Account.class));
     doNothing().when(accountTransferRepository).persist(any(AccountTransfer.class));
@@ -65,6 +65,29 @@ class AccountServiceTest {
     verify(accountRepository).getById(eq(1L));
     verify(accountRepository).getById(eq(2L));
   }
+
+  @Test
+  public void shouldDebitTransferMoneyWhenSenderHasSufficientMoney() {
+    doNothing().when(accountRepository)
+        .persist(any(Account.class), any(Account.class));
+    doNothing().when(accountTransferRepository).persist(any(AccountTransfer.class));
+    Optional<Account> sender = Optional
+        .of(Account.builder().id(1L).balance(BigDecimal.valueOf(50)).build());
+    Optional<Account> recipient = Optional
+        .of(Account.builder().id(2L).balance(BigDecimal.valueOf(10)).build());
+    doReturn(sender).when(accountRepository).getById(eq(1L));
+    doReturn(recipient).when(accountRepository).getById(eq(2L));
+    AccountTransfer accountTransfer = accountService.transfer(1L, 2L, BigDecimal.valueOf(-10));
+    assertThat(accountTransfer).isNotNull();
+    assertThat(accountTransfer.getStatus()).isEqualTo(TransactionStatus.COMPLETED);
+    assertThat(accountTransfer.getTransactionRef()).isNotNull();
+    verify(accountTransferRepository).persist(any(AccountTransfer.class));
+    verify(accountRepository).persist(any(Account.class), any(Account.class));
+    verify(accountRepository).getById(eq(1L));
+    verify(accountRepository).getById(eq(2L));
+  }
+
+
 
   @Test
   public void shouldThrowExceptionWhenSenderHasInSufficientMoney() {
