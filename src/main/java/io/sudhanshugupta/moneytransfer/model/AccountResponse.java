@@ -7,7 +7,6 @@ import lombok.Value;
 @Value
 @Builder
 public class AccountResponse {
-
   private Long accountId;
   private String name;
   private String email;

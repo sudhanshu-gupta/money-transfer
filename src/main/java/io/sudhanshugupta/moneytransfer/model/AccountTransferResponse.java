@@ -5,7 +5,6 @@ import lombok.Value;
 
 @Value(staticConstructor = "of")
 public class AccountTransferResponse {
-
   private String transactionReference;
   private TransactionStatus status;
 }

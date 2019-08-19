@@ -7,7 +7,6 @@ import lombok.Value;
 
 @Value
 public class AccountRequest {
-
   @NotNull
   private String name;
   @Email(message = "invalid email address")
